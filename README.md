@@ -7,16 +7,37 @@ Analisador de Google Ads da JV Truck Pneus. Programa local, de terminal, que:
 3. **Identifica** desperdícios e oportunidades, explicando cada recomendação com os dados da própria conta.
 4. **Aplica** as alterações que você aprovar — **nada é modificado sem a sua confirmação, item por item**.
 
+## Como abrir (clique e use)
+
+- **Windows:** dê dois cliques em **`iniciar.bat`**.
+- **Linux / Mac:** execute **`./iniciar.sh`** (ou `bash iniciar.sh`).
+
+Na primeira vez o lançador prepara tudo sozinho (instala o necessário) e abre o
+programa. Nas próximas, abre na hora. É só isso.
+
+> Precisa ter o **Python** instalado (https://www.python.org/downloads/ —
+> no Windows, marque *"Add Python to PATH"* na instalação).
+
+### Executável único (opcional, para pen drive)
+
+Quer levar o programa para outro computador **sem instalar Python**? No Windows,
+rode **`gerar_executavel.bat`** uma vez: ele cria `dist\JV Ads.exe`, um programa
+autônomo. Coloque o `JV Ads.exe` na mesma pasta do `google-ads.yaml` e do
+`config.yaml`.
+
 ## Experimente sem credenciais (modo demo)
+
+Abrindo pelo lançador **sem credenciais configuradas**, o programa entra
+automaticamente em **modo demo**, com dados fictícios de uma loja de pneus.
+Nenhuma conta é tocada. Serve para conhecer todas as telas antes de conectar a
+conta real.
+
+Pela linha de comando, o equivalente é:
 
 ```bash
 pip install -r requirements.txt
 python -m jv_ads
 ```
-
-Sem credenciais configuradas o programa entra automaticamente em **modo demo**,
-com dados fictícios de uma loja de pneus. Nenhuma conta é tocada. Serve para
-conhecer todas as telas antes de conectar a conta real.
 
 ## Conectar a conta real
 

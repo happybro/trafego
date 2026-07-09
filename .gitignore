@@ -12,3 +12,8 @@ __pycache__/
 .venv/
 venv/
 .pytest_cache/
+
+# Artefatos do PyInstaller (executável gerado localmente)
+build/
+dist/
+*.spec
