@@ -1,0 +1,14 @@
+# Credenciais — NUNCA versionar
+google-ads.yaml
+config.yaml
+
+# Dados locais
+*.db
+*.sqlite3
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/

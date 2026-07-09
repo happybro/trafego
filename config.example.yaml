@@ -1,0 +1,19 @@
+# Configuração do JV Ads.
+# Copie este arquivo para config.yaml e preencha.
+
+# ID da sua conta Google Ads (como aparece no canto superior, com ou sem traços).
+customer_id: "123-456-7890"
+
+# true = usar dados fictícios (sem tocar em conta nenhuma).
+demo: false
+
+# Limiares das regras de análise. Os padrões são conservadores;
+# ajuste conforme o porte da conta.
+analise:
+  periodo_dias: 30                    # janela de análise (dias completos, exclui hoje)
+  custo_minimo_pausar_palavra: 50.0   # R$ gastos sem conversão para sugerir pausar palavra
+  custo_minimo_negativar_termo: 30.0  # R$ gastos por termo pesquisado sem conversão
+  cliques_minimos_termo: 5            # amostra mínima de cliques para negativar termo
+  perda_orcamento_minima: 0.10        # fração de impressões perdidas por orçamento (10%)
+  aumento_orcamento_pct: 20           # % de aumento de orçamento sugerido
+  custo_minimo_revisar_campanha: 150.0

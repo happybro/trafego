@@ -1,0 +1,12 @@
+# Credenciais da Google Ads API.
+# Copie este arquivo para google-ads.yaml e preencha os valores.
+# NUNCA versione o google-ads.yaml (já está no .gitignore).
+
+developer_token: SEU_DEVELOPER_TOKEN
+client_id: SEU_CLIENT_ID.apps.googleusercontent.com
+client_secret: SEU_CLIENT_SECRET
+refresh_token: GERADO_PELO_setup_oauth.py
+use_proto_plus: True
+
+# Somente se a sua conta for acessada através de uma conta de administrador (MCC):
+# login_customer_id: "1234567890"
