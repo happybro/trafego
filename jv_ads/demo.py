@@ -25,7 +25,7 @@ class DemoProvider:
             CampaignStats(
                 campaign_id=1, nome="Pneus para Caminhão", status="ENABLED",
                 custo=1840.00, cliques=612, impressoes=14200,
-                conversoes=46, valor_conversoes=0.0,
+                conversoes=46, valor_conversoes=6900.0,
                 orcamento_diario=60.00,
                 orcamento_resource_name="customers/000/campaignBudgets/1",
                 orcamento_compartilhado=False,
@@ -34,7 +34,7 @@ class DemoProvider:
             CampaignStats(
                 campaign_id=2, nome="Socorro de Pneu 24h", status="ENABLED",
                 custo=920.00, cliques=305, impressoes=8100,
-                conversoes=18, valor_conversoes=0.0,
+                conversoes=20, valor_conversoes=3200.0,
                 orcamento_diario=40.00,
                 orcamento_resource_name="customers/000/campaignBudgets/2",
                 orcamento_compartilhado=False,
@@ -70,14 +70,14 @@ class DemoProvider:
         ]
         termos = [
             SearchTermStats(1, "Pneus para Caminhão",
-                            "pneu de bicicleta aro 29", custo=63.00,
-                            cliques=38, conversoes=0),
+                            "pneu de bicicleta aro 29", custo=88.00,
+                            cliques=41, conversoes=0),
             SearchTermStats(1, "Pneus para Caminhão",
                             "pneu 295/80 preço", custo=140.00,
                             cliques=52, conversoes=9),
             SearchTermStats(2, "Socorro de Pneu 24h",
-                            "vaga de emprego borracheiro", custo=34.50,
-                            cliques=17, conversoes=0),
+                            "vaga de emprego borracheiro", custo=110.00,
+                            cliques=40, conversoes=0),
         ]
         return AccountData(
             info=AccountInfo("000-000-0000", "JV Truck Pneus (DEMO)", "BRL",

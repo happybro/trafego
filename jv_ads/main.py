@@ -1,11 +1,12 @@
 """JV Ads — ponto de entrada.
 
-Fluxo: conectar → baixar dados → analisar com regras objetivas →
-mostrar o que alterar hoje → aplicar (só com confirmação).
+Fluxo: conectar → baixar dados → analisar com regras adaptativas →
+modo empresário (decisões, não métricas) → aplicar só com confirmação.
+Cada análise grava automaticamente o resumo do dia no diário.
 """
 from rich.console import Console
 
-from . import rules, ui
+from . import db, rules, ui
 from .config import load_config
 
 console = Console()
@@ -24,6 +25,15 @@ def _carregar(provider):
         return provider.fetch_account_data()
 
 
+def _analisar(dados, cfg):
+    recs = rules.analisar(
+        dados, cfg.analise, cfg.negocio,
+        recusas=db.recusas_recentes(cfg.analise.dias_lembrar_recusa),
+    )
+    ui.registrar_diario(recs)  # diário automático a cada análise
+    return recs
+
+
 def run() -> None:
     cfg = load_config()
     if cfg.demo:
@@ -40,22 +50,27 @@ def run() -> None:
         console.print("Confira o google-ads.yaml e o config.yaml (veja o README).")
         raise SystemExit(1) from exc
 
-    recs = rules.analisar(dados, cfg.analise)
+    recs = _analisar(dados, cfg)
 
     while True:
-        ui.mostrar_dashboard(dados, recs, cfg.demo)
-        ui.mostrar_recomendacoes(recs)
+        ui.tela_empresario(dados, recs, cfg.demo)
         escolha = ui.menu()
         if escolha == "1":
             ui.aplicar_alteracoes(recs, provider, cfg.demo)
             # Recarrega para refletir o que acabou de mudar na conta.
             dados = _carregar(provider)
-            recs = rules.analisar(dados, cfg.analise)
+            recs = _analisar(dados, cfg)
         elif escolha == "2":
-            dados = _carregar(provider)
-            recs = rules.analisar(dados, cfg.analise)
+            ui.mostrar_recomendacoes(recs)
         elif escolha == "3":
+            ui.mostrar_prioridades(dados, recs)
+        elif escolha == "4":
+            ui.mostrar_diario()
+        elif escolha == "5":
             ui.mostrar_historico()
+        elif escolha == "6":
+            dados = _carregar(provider)
+            recs = _analisar(dados, cfg)
         else:
             console.print("Até logo!")
             break

@@ -55,18 +55,35 @@ cp config.example.yaml config.yaml           # preencha o customer_id da conta
 python -m jv_ads
 ```
 
-## O que as regras analisam
+## Como as regras pensam (adaptativas, sem valores fixos)
+
+Não há limiar fixo em reais. A referência é o **CPA médio da própria conta**
+(quanto ela paga, em média, por uma conversão):
+
+> Se uma palavra gastou o suficiente para ter comprado λ conversões pela
+> média da conta e trouxe **zero**, a chance de ser só azar é `e^-λ`.
+> O complemento é a **confiança** mostrada em cada recomendação (★★★★☆ 82%).
 
 | Regra | Dispara quando | Ação oferecida |
 |---|---|---|
-| Palavra sem conversão | gastou ≥ R$ 50 em 30 dias e 0 conversões | Pausar (reversível) |
-| Termo de desperdício | termo pesquisado gastou ≥ R$ 30, ≥ 5 cliques, 0 conversões | Adicionar negativa exata |
-| Orçamento limitado | campanha converte com CPA ≤ média da conta e perde ≥ 10% das impressões por orçamento | Aumentar orçamento +20% |
-| Campanha sem retorno | gastou ≥ R$ 150 e 0 conversões | Alerta para revisão manual (sem ação automática) |
+| Rastreamento quebrado | conta gasta e registra **zero** conversões | Alerta — e bloqueia todos os cortes (cortar às cegas é perigoso) |
+| Palavra sem conversão | gasto ≥ referência do CPA da conta, confiança ≥ 75% | Pausar (reversível) + economia estimada/mês |
+| Termo de desperdício | idem, contra o CPA da própria campanha | Negativa exata + economia estimada/mês |
+| Orçamento limitado | campanha com CPA ≤ média perde ≥ 10% das impressões por orçamento | Aumentar +20% + lucro potencial/mês |
+| Campanha sem retorno | gasto ≥ referência e 0 conversões | Alerta para revisão manual (sem ação automática) |
 | Campanha saudável | CPA ≤ média da conta | "Não alterar" |
 
-Todos os limiares são configuráveis no `config.yaml`. As regras exigem amostra
-mínima de propósito: com poucos dados, a resposta certa é não mexer.
+- **Impacto financeiro**: economias usam o gasto real medido. Lucro em R$ só
+  aparece quando há valor de conversão (medido na conta ou informado em
+  `negocio.valor_por_conversao` no `config.yaml`); sem ele, o impacto é dito
+  em conversões/mês — o sistema nunca inventa reais.
+- **Aprendizado**: quando você recusa uma recomendação, o programa pergunta o
+  motivo, salva e para de insistir naquela ação por 30 dias.
+- **Diário automático**: cada análise grava um resumo do dia (desperdícios,
+  oportunidades, economia estimada, maior problema, melhor campanha) —
+  consultável no menu Diário.
+- A sensibilidade é configurável no `config.yaml` (`confianca_minima` etc.).
+  Com poucos dados, a resposta certa é não mexer — e o sistema diz isso.
 
 ## Segurança das alterações
 

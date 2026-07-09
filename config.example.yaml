@@ -7,13 +7,19 @@ customer_id: "123-456-7890"
 # true = usar dados fictícios (sem tocar em conta nenhuma).
 demo: false
 
-# Limiares das regras de análise. Os padrões são conservadores;
-# ajuste conforme o porte da conta.
+# Dados do negócio que o Google não conhece.
+negocio:
+  # Quanto vale, em média, uma conversão para a empresa (R$ de lucro bruto).
+  # Ex.: se a cada 10 conversões você fecha 3 vendas com R$ 500 de lucro cada,
+  # o valor por conversão é 150. Com 0, o impacto de oportunidades aparece
+  # em conversões/mês em vez de reais — o sistema nunca inventa lucro.
+  valor_por_conversao: 0
+
+# Sensibilidade das regras adaptativas. NÃO há limiares fixos em reais:
+# a referência é sempre o CPA médio da própria conta.
 analise:
-  periodo_dias: 30                    # janela de análise (dias completos, exclui hoje)
-  custo_minimo_pausar_palavra: 50.0   # R$ gastos sem conversão para sugerir pausar palavra
-  custo_minimo_negativar_termo: 30.0  # R$ gastos por termo pesquisado sem conversão
-  cliques_minimos_termo: 5            # amostra mínima de cliques para negativar termo
-  perda_orcamento_minima: 0.10        # fração de impressões perdidas por orçamento (10%)
-  aumento_orcamento_pct: 20           # % de aumento de orçamento sugerido
-  custo_minimo_revisar_campanha: 150.0
+  periodo_dias: 30           # janela de análise (dias completos, exclui hoje)
+  confianca_minima: 0.75     # só recomendar corte com ≥ 75% de confiança
+  perda_orcamento_minima: 0.10  # fração de impressões perdidas por orçamento (10%)
+  aumento_orcamento_pct: 20  # % de aumento de orçamento sugerido
+  dias_lembrar_recusa: 30    # por quantos dias respeitar um "não quero"

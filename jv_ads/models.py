@@ -93,9 +93,35 @@ class Recommendation:
     motivo: str        # explicação com os dados que justificam
     acao: Optional[dict] = None
 
+    # Sprint 2 — inteligência
+    chave: str = ""                       # identificador estável (para feedback/aprendizado)
+    confianca: float = 0.0                # 0.0 a 1.0 — quão seguro é aplicar
+    impacto_mensal: float = 0.0           # R$/mês (ou nº de conversões/mês se impacto_unidade != R$)
+    impacto_tipo: str = "neutro"          # economia | lucro | neutro
+    impacto_unidade: str = "R$"           # "R$" ou "conv"
+    recusa_anterior: Optional[str] = None # motivo dado pelo usuário ao recusar antes
+
     @property
     def aplicavel(self) -> bool:
-        return self.acao is not None
+        return self.acao is not None and self.recusa_anterior is None
+
+    @property
+    def impacto_texto(self) -> str:
+        """Frase pronta do impacto financeiro estimado."""
+        if self.impacto_tipo == "neutro" or self.impacto_mensal <= 0:
+            return ""
+        valor = (f"R$ {self.impacto_mensal:,.0f}".replace(",", ".")
+                 if self.impacto_unidade == "R$"
+                 else f"{self.impacto_mensal:.1f} conversões")
+        if self.impacto_tipo == "economia":
+            return f"Economia estimada: {valor}/mês"
+        return f"Lucro potencial: +{valor}/mês"
+
+    @property
+    def estrelas(self) -> str:
+        """Confiança em estrelas: ★★★★☆ 82%."""
+        cheias = round(self.confianca * 5)
+        return "★" * cheias + "☆" * (5 - cheias) + f" {self.confianca * 100:.0f}%"
 
 
 @dataclass

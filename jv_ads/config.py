@@ -17,14 +17,27 @@ GOOGLE_ADS_YAML = BASE_DIR / "google-ads.yaml"
 
 @dataclass
 class AnaliseConfig:
-    """Limiares das regras. Todos configuráveis no config.yaml."""
+    """Parâmetros das regras adaptativas.
+
+    Não há valores fixos em reais: os limiares derivam do CPA médio da
+    própria conta. Aqui ficam apenas os parâmetros de sensibilidade.
+    """
     periodo_dias: int = 30
-    custo_minimo_pausar_palavra: float = 50.0   # R$ gastos sem conversão para sugerir pausa
-    custo_minimo_negativar_termo: float = 30.0  # R$ gastos por termo sem conversão
-    cliques_minimos_termo: int = 5              # amostra mínima para negativar termo
-    perda_orcamento_minima: float = 0.10        # 10% de impressões perdidas por orçamento
-    aumento_orcamento_pct: float = 20.0         # % de aumento sugerido
-    custo_minimo_revisar_campanha: float = 150.0
+    confianca_minima: float = 0.75       # só recomendar corte com ≥ 75% de confiança
+    perda_orcamento_minima: float = 0.10 # fração de impressões perdidas por orçamento
+    aumento_orcamento_pct: float = 20.0  # % de aumento de orçamento sugerido
+    dias_lembrar_recusa: int = 30        # por quantos dias respeitar um "não quero"
+
+
+@dataclass
+class NegocioConfig:
+    """Dados do negócio que a API do Google não conhece.
+
+    valor_por_conversao: quanto vale, em média, uma conversão para a
+    empresa (em R$ de lucro bruto). Opcional — sem ele, o impacto de
+    oportunidades é mostrado em conversões/mês, nunca em reais inventados.
+    """
+    valor_por_conversao: float = 0.0
 
 
 @dataclass
@@ -32,6 +45,7 @@ class AppConfig:
     customer_id: str = ""
     demo: bool = False
     analise: AnaliseConfig = field(default_factory=AnaliseConfig)
+    negocio: NegocioConfig = field(default_factory=NegocioConfig)
 
     @property
     def customer_id_digits(self) -> str:
@@ -49,6 +63,9 @@ def load_config() -> AppConfig:
         for chave, valor in (raw.get("analise") or {}).items():
             if hasattr(cfg.analise, chave):
                 setattr(cfg.analise, chave, type(getattr(cfg.analise, chave))(valor))
+        for chave, valor in (raw.get("negocio") or {}).items():
+            if hasattr(cfg.negocio, chave):
+                setattr(cfg.negocio, chave, type(getattr(cfg.negocio, chave))(valor))
 
     if os.environ.get("JV_ADS_DEMO") == "1":
         cfg.demo = True
